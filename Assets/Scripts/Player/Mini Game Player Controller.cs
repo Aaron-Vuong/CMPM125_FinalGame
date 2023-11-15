@@ -14,23 +14,51 @@ public class MiniGamePlayerController : MonoBehaviour
 
     [Header("Plank Count UI")] 
     [SerializeField] private TMP_Text plankCountText;
+
+    [Header("Win UI")] 
+    [SerializeField] private TMP_Text winText;
     
     //Private movement variables
     private float _xInput;
 
     private int _plankCount;
+
+    private bool _win;
     
     //Private components
     private Rigidbody _rb;
+
+    //Singleton
+    private static MiniGamePlayerController _instance;
+    public static MiniGamePlayerController Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+    
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
     
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _win = false;
     }
     
     private void Update()
     {
-        ReceiveMovementInput();
+        //ReceiveMovementInput();
     }
 
     private void FixedUpdate()
@@ -50,15 +78,22 @@ public class MiniGamePlayerController : MonoBehaviour
             Destroy(other.gameObject);
             _plankCount++;
             plankCountText.text = "Wooden Plank: " + _plankCount;
+
+            if(_plankCount >= 5){ // win
+                _win = true;
+                plankCountText.enabled = false;
+                winText.enabled = true;
+                FirstPersonPlayerController.Instance.BuildBridge();
+            }
         }
     }
 
     //------------------------------------------------Non-Update Area-------------------------------------------------------
     
-    private void ReceiveMovementInput()
+    public void ReceiveMovementInput()
     {
-        //If have movement input, store _xInput & _yInput
-        if (Input.GetAxis("Horizontal") != 0)
+        //If game not over and have movement input, store _xInput & _yInput
+        if (!_win && Input.GetAxis("Horizontal") != 0)
         {
             _xInput = Input.GetAxis("Horizontal");
         }
@@ -83,5 +118,9 @@ public class MiniGamePlayerController : MonoBehaviour
             Vector3 tempVelocity = _rb.velocity;
             _rb.velocity = Vector3.Lerp(tempVelocity, Vector3.zero, stopLerpFactor);
         }
+    }
+
+    public bool getWin(){
+        return _win;
     }
 }

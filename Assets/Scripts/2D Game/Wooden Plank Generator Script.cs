@@ -17,10 +17,14 @@ public class WoodenPlankGeneratorScript : MonoBehaviour
     {
         while (true)
         {
+            if(MiniGamePlayerController.Instance.getWin()){
+                break;
+            }
+            
             yield return new WaitForSeconds(plankGenerationInterval);
             var posX = Random.Range(-generationAreaWidth, generationAreaWidth);
 
-            Vector3 generationPos = new Vector3(posX, transform.position.y, transform.position.z);
+            Vector3 generationPos = new Vector3(transform.position.x + posX, transform.position.y, transform.position.z);
             GameObject.Instantiate(plankOjb, generationPos, Quaternion.identity);
         }
     }

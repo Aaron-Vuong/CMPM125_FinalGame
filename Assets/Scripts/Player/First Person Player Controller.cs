@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FirstPersonPlayerController : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class FirstPersonPlayerController : MonoBehaviour
 
     [Header("Camera Ray UI Text")] 
     [SerializeField] private TMP_Text cameraRayCheckText;
+
+    [Header("Bridge Object")] 
+    [SerializeField] private GameObject Bridge;
     
     //Private variables
     private float _xInput;
@@ -70,7 +74,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     {
         GroundCheck();
         CameraRayCheck();
-        ReceiveMovementInput();
+        //ReceiveMovementInput();
     }
 
     private void FixedUpdate()
@@ -131,8 +135,16 @@ public class FirstPersonPlayerController : MonoBehaviour
             if (!cameraRayCheckText.enabled)
             {
                 cameraRayCheckText.enabled = true;
-            }
+                Debug.Log("Looking down");
+                // https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.LoadScene.html
+                SceneManager.LoadScene("Test 2D Game Scene", LoadSceneMode.Additive);
+                ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._2DGame);
 
+                // stop player
+                _xInput = 0;
+                _yInput = 0;
+
+            }
             cameraRayCheckText.text = "Interact With Handheld";
         }
         else
@@ -143,11 +155,15 @@ public class FirstPersonPlayerController : MonoBehaviour
             {
                 cameraRayCheckText.text = String.Empty;
                 cameraRayCheckText.enabled = false;
+                Debug.Log("not looking down");
+                ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._3DFPGame);
+                //https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.UnloadSceneAsync.html
+                SceneManager.UnloadSceneAsync("Test 2D Game Scene");
             }
         }
     }
     
-    private void ReceiveMovementInput()
+    public void ReceiveMovementInput()
     {
         //If have movement input, store _xInput & _yInput
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
@@ -220,5 +236,9 @@ public class FirstPersonPlayerController : MonoBehaviour
                 camTrans.localEulerAngles = new Vector3(-angleXMax, 0, 0);
             }
         }
+    }
+
+    public void BuildBridge(){
+        Bridge.SetActive(true);
     }
 }
