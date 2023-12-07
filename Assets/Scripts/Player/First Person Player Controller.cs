@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.Mathematics;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,10 +30,11 @@ public class FirstPersonPlayerController : MonoBehaviour
     [Header("Camera Ray UI Text")] 
     [SerializeField] private TMP_Text cameraRayCheckText;
 
-    [Header("Bridge Object")] 
-    // [SerializeField] private GameObject Bridge;
+    [Header("Bridges")] 
+    [SerializeField] private float minimumDistance;
+    [SerializeField] private Material bridgeMaterial;
     private GameObject[] bridges;
-    // private Color bridgeColor = new Color(3962263f, 0.1578556f, 0.06915268f, 1f);
+    
 
     [Header("Trail Object")]
     [SerializeField] private GameObject trail;
@@ -75,15 +77,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     private void Start()
     {
         bridges = GameObject.FindGameObjectsWithTag("Bridge");
-
-        float minDist = Mathf.Infinity;
-        foreach(GameObject b in bridges) {
-            float dist = Vector3.Distance(transform.position, b.transform.position);
-            if (dist < minDist) {
-                closestBridge = b;
-                minDist = dist;
-            }
-        }
+        GetClosestBridge();
         _rb = GetComponent<Rigidbody>();
         InitiateMouse();
         InitiateUI();
@@ -92,7 +86,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     private void Update()
     {
         GroundCheck();
-        ToggleHandheldCheck();
+        ClickCheck();
         if (trail && closestBridge) {
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBridge.transform.position, trailSpeed * Time.deltaTime);
         }
@@ -149,11 +143,12 @@ public class FirstPersonPlayerController : MonoBehaviour
         _rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
     }
     
-    private void ToggleHandheldCheck() {
+    private void ClickCheck() {
         if (Input.GetButtonDown("Fire1")) {
             CameraRayCheck();
 
             trail.transform.position = gameObject.transform.position;
+            GetClosestBridge();
         }
     }
 
@@ -276,11 +271,27 @@ public class FirstPersonPlayerController : MonoBehaviour
         }
     }
 
+    private void GetClosestBridge() {
+        float minDist = minimumDistance;
+        foreach(GameObject b in bridges) {
+            float dist = Vector3.Distance(transform.position, b.transform.position);
+            if (dist < minDist && !b.GetComponent<BoxCollider>().enabled) {
+                closestBridge = b;
+                minDist = dist;
+            }
+            Debug.Log(b.name);
+        }
+        if (closestBridge) {
+            Debug.Log("Closest Bridge: " + closestBridge.name);
+        } else {
+            Debug.Log("No Bridges Nearby");
+        }
+    }
     public void BuildBridge(){
         // Bridge.SetActive(true);
         if (!closestBridge.GetComponent<BoxCollider>().enabled) {
             closestBridge.GetComponent<BoxCollider>().enabled = true;
-            closestBridge.GetComponent<Renderer>().material.color = new Color(3962263f, 0.1578556f, 0.06915268f, 1f);
+            closestBridge.GetComponent<Renderer>().material = bridgeMaterial;
         }
     }
 }
