@@ -52,6 +52,13 @@ public class FirstPersonPlayerController : MonoBehaviour
     private LayerMask _onlyHandheld = 1 << 8;
     private LayerMask _ignorePlayerLayerMask = ~(1 << 6);
 
+    private enum Games {
+        Catch,
+        Break,
+    }
+
+    private Games selected;
+
     //Private components
     private Rigidbody _rb;
     
@@ -84,6 +91,8 @@ public class FirstPersonPlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         InitiateMouse();
         InitiateUI();
+
+        selected = Games.Break; // selects what game will show on 2D display
     }
 
     private void Update()
@@ -170,7 +179,17 @@ public class FirstPersonPlayerController : MonoBehaviour
                 cameraRayCheckText.enabled = true;
                 Debug.Log("Looking down");
                 // https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.LoadScene.html
-                SceneManager.LoadScene("Test 2D Game Scene", LoadSceneMode.Additive);
+                
+                switch (selected){
+                    case Games.Catch:
+                        SceneManager.LoadScene("SupplyCatcher", LoadSceneMode.Additive);
+                        break;
+                    
+                    case Games.Break:
+                        SceneManager.LoadScene("BreakOut", LoadSceneMode.Additive);
+                        break;
+                }
+                
                 ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._2DGame);
 
                 // stop player
@@ -191,7 +210,18 @@ public class FirstPersonPlayerController : MonoBehaviour
                 Debug.Log("not looking down");
                 ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._3DFPGame);
                 //https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.UnloadSceneAsync.html
-                SceneManager.UnloadSceneAsync("Test 2D Game Scene");
+                
+                switch (selected){
+                    case Games.Catch:
+                        SceneManager.UnloadSceneAsync("SupplyCatcher");
+                        break;
+                    
+                    case Games.Break:
+                        SceneManager.UnloadSceneAsync("BreakOut");
+                        break;
+                }
+
+                
             }
         }
     }
