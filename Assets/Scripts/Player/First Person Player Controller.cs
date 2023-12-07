@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     
     [Header("Player Movement")] 
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpForce;
     [SerializeField] [Range(0, 0.5f)] private float moveLerpFactor;
     [SerializeField] [Range(0, 0.5f)] private float stopLerpFactor;
 
@@ -28,8 +30,15 @@ public class FirstPersonPlayerController : MonoBehaviour
     [SerializeField] private TMP_Text cameraRayCheckText;
 
     [Header("Bridge Object")] 
-    [SerializeField] private GameObject Bridge;
-    
+    // [SerializeField] private GameObject Bridge;
+    private GameObject[] bridges;
+    // private Color bridgeColor = new Color(3962263f, 0.1578556f, 0.06915268f, 1f);
+
+    [Header("Trail Object")]
+    [SerializeField] private GameObject trail;
+    private float trailSpeed = 25f;
+    private GameObject closestBridge;
+
     //Private variables
     private float _xInput;
     private float _yInput;
@@ -65,6 +74,16 @@ public class FirstPersonPlayerController : MonoBehaviour
 
     private void Start()
     {
+        bridges = GameObject.FindGameObjectsWithTag("Bridge");
+
+        float minDist = Mathf.Infinity;
+        foreach(GameObject b in bridges) {
+            float dist = Vector3.Distance(transform.position, b.transform.position);
+            if (dist < minDist) {
+                closestBridge = b;
+                minDist = dist;
+            }
+        }
         _rb = GetComponent<Rigidbody>();
         InitiateMouse();
         InitiateUI();
@@ -73,10 +92,12 @@ public class FirstPersonPlayerController : MonoBehaviour
     private void Update()
     {
         GroundCheck();
-        // CameraRayCheck();
         ToggleHandheldCheck();
-        //ReceiveMovementInput();
+        if (trail && closestBridge) {
+            trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBridge.transform.position, trailSpeed * Time.deltaTime);
+        }
     }
+        
 
     private void FixedUpdate()
     {
@@ -123,12 +144,19 @@ public class FirstPersonPlayerController : MonoBehaviour
             }
         }
     }
+
+    private void ApplyJump() {
+        _rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
+    }
     
     private void ToggleHandheldCheck() {
         if (Input.GetButtonDown("Fire1")) {
             CameraRayCheck();
+
+            trail.transform.position = gameObject.transform.position;
         }
     }
+
     private void CameraRayCheck()
     {
         Ray cameraRay = new Ray(camTrans.position, camTrans.forward);
@@ -171,6 +199,10 @@ public class FirstPersonPlayerController : MonoBehaviour
     
     public void ReceiveMovementInput()
     {
+        if (Input.GetButtonDown("Jump") && _isGrounded) {
+            Debug.Log("jump");
+            ApplyJump();
+        }
         //If have movement input, store _xInput & _yInput
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
@@ -245,6 +277,10 @@ public class FirstPersonPlayerController : MonoBehaviour
     }
 
     public void BuildBridge(){
-        Bridge.SetActive(true);
+        // Bridge.SetActive(true);
+        if (!closestBridge.GetComponent<BoxCollider>().enabled) {
+            closestBridge.GetComponent<BoxCollider>().enabled = true;
+            closestBridge.GetComponent<Renderer>().material.color = new Color(3962263f, 0.1578556f, 0.06915268f, 1f);
+        }
     }
 }
