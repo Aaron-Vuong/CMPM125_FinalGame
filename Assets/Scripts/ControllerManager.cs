@@ -23,10 +23,22 @@ public class ControllerManager : MonoBehaviour
     }
 
     public ControllerStates controllerState;
+
+    // enables 2D game dev/debug
+    public bool _2DDev;
+
+    public RenderTexture screen;
+
+
     // Start is called before the first frame update
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
+
+        if(_2DDev){
+            controllerState = ControllerStates._2DGame;
+            return;
+        }
         controllerState = ControllerStates._3DFPGame;
 
     }
@@ -38,12 +50,14 @@ public class ControllerManager : MonoBehaviour
         {
             case ControllerStates._3DFPGame:
                 //Debug.Log("3D control");
-                FirstPersonPlayerController.Instance.ReceiveMovementInput();
+                if(FirstPersonPlayerController.Instance)
+                    FirstPersonPlayerController.Instance.ReceiveMovementInput();
                 break;
 
             case ControllerStates._2DGame:
                 //Debug.Log("2D control");
-                MiniGamePlayerController.Instance.ReceiveMovementInput();
+                if(MiniGamePlayerController.Instance)
+                    MiniGamePlayerController.Instance.ReceiveMovementInput();
                 break;
         }
     }
@@ -51,4 +65,5 @@ public class ControllerManager : MonoBehaviour
     public void setControllerState(ControllerStates controllerState){
         this.controllerState = controllerState;
     }
+
 }

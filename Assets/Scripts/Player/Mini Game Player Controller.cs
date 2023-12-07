@@ -28,6 +28,8 @@ public class MiniGamePlayerController : MonoBehaviour
     //Private components
     private Rigidbody _rb;
 
+    public Camera _2DCam;
+
     //Singleton
     private static MiniGamePlayerController _instance;
     public static MiniGamePlayerController Instance
@@ -54,6 +56,10 @@ public class MiniGamePlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _win = false;
+
+        if(ControllerManager.Instance.screen != null){ // 3D world has console with display
+            _2DCam.targetTexture = ControllerManager.Instance.screen;
+        }
     }
     
     private void Update()
@@ -83,7 +89,8 @@ public class MiniGamePlayerController : MonoBehaviour
                 _win = true;
                 plankCountText.enabled = false;
                 winText.enabled = true;
-                FirstPersonPlayerController.Instance.BuildBridge();
+                if(!ControllerManager.Instance._2DDev) // not in 2D development mode
+                    FirstPersonPlayerController.Instance.BuildBridge();
             }
         }
     }

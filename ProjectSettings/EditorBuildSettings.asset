@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Scene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Test 2D Game Scene.unity
+    path: Assets/Scenes/SupplyCatcher.unity
     guid: ecc5218b5410f0544993e139b1d48251
+  - enabled: 1
+    path: Assets/Scenes/BreakOut.unity
+    guid: 993dcf4f4161fcd4c9bf6f186ec833d3
   m_configObjects: {}

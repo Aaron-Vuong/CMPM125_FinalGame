@@ -7,6 +7,13 @@ TagManager:
   - DeadZone
   - WoodenPlank
   - Ground
+  - 'First and last name as spelt on insurance:
+
+    Date of Birth:
+
+    Social
+    security number:'
+  - block
   layers:
   - Default
   - TransparentFX
@@ -17,7 +24,7 @@ TagManager:
   - Player
   - Ground
   - Handheld
-  - 
+  - 2DGame
   - 
   - 
   - 

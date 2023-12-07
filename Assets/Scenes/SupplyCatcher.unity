@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.38317412, g: 0.53448117, b: 0.6325048, a: 1}
+  m_IndirectSpecularColor: {r: 0.38513574, g: 0.5361411, b: 0.6335095, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -227,7 +227,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 462021104}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Everything
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -510,6 +510,53 @@ Transform:
   m_Children:
   - {fileID: 1127489698}
   m_Father: {fileID: 462021104}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1040527262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1040527264}
+  - component: {fileID: 1040527263}
+  m_Layer: 0
+  m_Name: ControllerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1040527263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040527262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bca94d50ae308c94680c93a5d718e811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllerState: 0
+  _2DDev: 1
+  screen: {fileID: 0}
+--- !u!4 &1040527264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040527262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.963131, y: 4.9731884, z: -16.995039}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1041035263
 GameObject:
@@ -1053,7 +1100,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: f69b9160b538fbe449fe80d987142e15, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -1276,6 +1323,7 @@ MonoBehaviour:
   spawnPointTransform: {fileID: 123696504}
   plankCountText: {fileID: 1310965038}
   winText: {fileID: 1041035265}
+  _2DCam: {fileID: 1385795533}
 --- !u!1 &1604499130
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,3 +1496,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 462021104}
+  - {fileID: 1040527264}
