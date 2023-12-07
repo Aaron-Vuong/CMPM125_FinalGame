@@ -41,6 +41,9 @@ public class FirstPersonPlayerController : MonoBehaviour
     private float trailSpeed = 25f;
     private GameObject closestBridge;
 
+    [Header("Game Selection")]
+    public HandheldGames currentSelectedGame = HandheldGames.None;
+
     //Private variables
     private float _xInput;
     private float _yInput;
@@ -154,6 +157,7 @@ public class FirstPersonPlayerController : MonoBehaviour
 
     private void CameraRayCheck()
     {
+        if (currentSelectedGame == HandheldGames.None) { return; }
         Ray cameraRay = new Ray(camTrans.position, camTrans.forward);
         RaycastHit hit;
 
