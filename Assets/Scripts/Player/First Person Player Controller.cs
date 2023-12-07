@@ -19,7 +19,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     [SerializeField] [Range(0, 0.5f)] private float moveLerpFactor;
     [SerializeField] [Range(0, 0.5f)] private float stopLerpFactor;
 
-    [Header("First Person Camera Transform")] 
+    [Header("First Person Camera")] 
     [SerializeField] private Transform camTrans;
 
     [Header("Camera Movement")] 
@@ -150,7 +150,7 @@ public class FirstPersonPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1")) {
             CameraRayCheck();
 
-            trail.transform.position = gameObject.transform.position;
+            trail.transform.position = camTrans.position + (camTrans.forward * 5f);
             GetClosestBridge();
         }
     }
@@ -283,13 +283,15 @@ public class FirstPersonPlayerController : MonoBehaviour
                 closestBridge = b;
                 minDist = dist;
             }
-            Debug.Log(b.name);
+            // Debug.Log(b.name);
         }
+        /*
         if (closestBridge) {
             Debug.Log("Closest Bridge: " + closestBridge.name);
         } else {
             Debug.Log("No Bridges Nearby");
         }
+        */
     }
     public void BuildBridge(){
         // Bridge.SetActive(true);
