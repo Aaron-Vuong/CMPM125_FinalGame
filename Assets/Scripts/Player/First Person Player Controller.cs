@@ -73,7 +73,8 @@ public class FirstPersonPlayerController : MonoBehaviour
     private void Update()
     {
         GroundCheck();
-        CameraRayCheck();
+        // CameraRayCheck();
+        ToggleHandheldCheck();
         //ReceiveMovementInput();
     }
 
@@ -123,6 +124,11 @@ public class FirstPersonPlayerController : MonoBehaviour
         }
     }
     
+    private void ToggleHandheldCheck() {
+        if (Input.GetButtonDown("Fire1")) {
+            CameraRayCheck();
+        }
+    }
     private void CameraRayCheck()
     {
         Ray cameraRay = new Ray(camTrans.position, camTrans.forward);
