@@ -1319,6 +1319,7 @@ MonoBehaviour:
   plankCountText: {fileID: 1310965038}
   winText: {fileID: 1041035265}
   _2DCam: {fileID: 1385795533}
+  blocks: []
 --- !u!54 &1496894027
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1973,6 +1974,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Block
+      objectReference: {fileID: 0}
+    - target: {fileID: 4757336751684537023, guid: 914bc6639d03c8e46869650c519409b7,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4757336751684537023, guid: 914bc6639d03c8e46869650c519409b7,
         type: 3}

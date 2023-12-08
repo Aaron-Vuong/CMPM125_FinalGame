@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     [SerializeField] private ParticleSystem explosionParticles;
     private GameObject[] bridges;
     private GameObject closestBridge;
-    private GameObject[] breakables;
+    private List<GameObject> breakables;
     private GameObject closestBreakable;
 
     
@@ -83,11 +84,20 @@ public class FirstPersonPlayerController : MonoBehaviour
 
     private void Start()
     {
+        _rb = GetComponent<Rigidbody>();
         bridges = GameObject.FindGameObjectsWithTag("Bridge");
-        breakables = GameObject.FindGameObjectsWithTag("Breakable");
+        GameObject[] existingBreakables = GameObject.FindGameObjectsWithTag("Breakable");
+        Debug.Log(existingBreakables.Length);
+
+        breakables = new List<GameObject>();
+
+        foreach (GameObject b in existingBreakables) {
+            breakables.Add(b);
+        }
+
+        Debug.Log(breakables.Count);
         SetClosestBridge();
         SetClosestBreakable();
-        _rb = GetComponent<Rigidbody>();
         InitiateMouse();
         InitiateUI();
     }
@@ -98,7 +108,7 @@ public class FirstPersonPlayerController : MonoBehaviour
         ClickCheck();
         if (trail && currentSelectedGame == HandheldGames.Catch) {
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBridge.transform.position, trailSpeed * Time.deltaTime);
-        } else if (trail && currentSelectedGame == HandheldGames.Break) {
+        } else if (trail && currentSelectedGame == HandheldGames.Break && breakables.Count != 0) {
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBreakable.transform.position, trailSpeed * Time.deltaTime);
         }
     }
@@ -344,6 +354,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     }
     public void Break() {
         Instantiate(explosionParticles, closestBreakable.transform.position, Quaternion.identity);
+        breakables.Remove(closestBreakable);
         Destroy(closestBreakable);
     }
 }

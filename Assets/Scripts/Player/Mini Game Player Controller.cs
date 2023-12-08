@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ public class MiniGamePlayerController : MonoBehaviour
 
     public Camera _2DCam;
 
-    public GameObject[] blocks;
+    public List<GameObject> blocks;
 
     //Singleton
     private static MiniGamePlayerController _instance;
@@ -64,13 +65,20 @@ public class MiniGamePlayerController : MonoBehaviour
             _2DCam.targetTexture = ControllerManager.Instance.screen;
         }
 
-        blocks = GameObject.FindGameObjectsWithTag("block");
+        blocks = new List<GameObject>();
+
+        GameObject[] existingBlocks = GameObject.FindGameObjectsWithTag("block");
+        foreach (GameObject b in existingBlocks) {
+            blocks.Add(b);
+        }
     }
     
     private void Update()
     {
         if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !_win) {
-
+            if (blocks.Count <= 0) {
+                _win = true;
+            }
         }
         //ReceiveMovementInput();
         if (_win && FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !winFlag)

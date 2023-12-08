@@ -62,6 +62,7 @@ public class BallBounce : MonoBehaviour
         if (collision.gameObject.CompareTag("block"))
         {
             Instantiate(explosionParticles, collision.gameObject.transform.position, Quaternion.identity);
+            MiniGamePlayerController.Instance.blocks.Remove(collision.gameObject);
             Destroy(collision.gameObject, 0.1f);
         }
         
@@ -75,6 +76,6 @@ public class BallBounce : MonoBehaviour
         Debug.Log("Life Lost");
         transform.gameObject.SetActive(false);
     }
-    
+
 
 }
