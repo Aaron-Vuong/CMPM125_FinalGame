@@ -3,7 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - block
+  - 'First and last name as spelt on insurance:
+
+    Date of Birth:
+
+    Social security
+    number:'
+  - Ground
+  - DeadZone
+  - WoodenPlank
+  - Bridge
+  - Ball
+  - Breakable
   layers:
   - Default
   - TransparentFX

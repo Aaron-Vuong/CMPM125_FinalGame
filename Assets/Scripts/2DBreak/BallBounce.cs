@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BallBounce : MonoBehaviour
 {
-    private float bounceMultiply = 10.0f;
+    private float bounceMultiply = 15.0f;
     Rigidbody rb;
 
     [SerializeField] private ParticleSystem explosionParticles;
@@ -30,7 +30,7 @@ public class BallBounce : MonoBehaviour
 
         // Apply the reflection force to the ball
         rb.velocity = Vector3.Reflect(rb.velocity, collision.contacts[0].normal).normalized * bounceMultiply;
-        Debug.Log(rb.velocity);
+        // Debug.Log(rb.velocity);
         if(rb.velocity.y < 0.02 && rb.velocity.y > -0.02){
             Vector3 temp = rb.velocity;
             
@@ -69,12 +69,12 @@ public class BallBounce : MonoBehaviour
         {
             loseLife();
         }
-    
     }
 
     private void loseLife(){
         Debug.Log("Life Lost");
         transform.gameObject.SetActive(false);
     }
+    
 
 }

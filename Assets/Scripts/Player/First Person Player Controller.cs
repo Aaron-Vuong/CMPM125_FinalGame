@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.Mathematics;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -30,16 +29,21 @@ public class FirstPersonPlayerController : MonoBehaviour
     [Header("Camera Ray UI Text")] 
     [SerializeField] private TMP_Text cameraRayCheckText;
 
-    [Header("Bridges")] 
+    [Header("Bridges & Breakables")] 
     [SerializeField] private float minimumDistance;
     [SerializeField] private Material bridgeMaterial;
+    [SerializeField] private ParticleSystem explosionParticles;
     private GameObject[] bridges;
+    private GameObject closestBridge;
+    private GameObject[] breakables;
+    private GameObject closestBreakable;
+
     
 
     [Header("Trail Object")]
     [SerializeField] private GameObject trail;
     private float trailSpeed = 25f;
-    private GameObject closestBridge;
+    
 
     [Header("Game Selection")]
     public HandheldGames currentSelectedGame = HandheldGames.None;
@@ -80,19 +84,22 @@ public class FirstPersonPlayerController : MonoBehaviour
     private void Start()
     {
         bridges = GameObject.FindGameObjectsWithTag("Bridge");
-        GetClosestBridge();
+        breakables = GameObject.FindGameObjectsWithTag("Breakable");
+        SetClosestBridge();
+        SetClosestBreakable();
         _rb = GetComponent<Rigidbody>();
         InitiateMouse();
         InitiateUI();
-
     }
 
     private void Update()
     {
         GroundCheck();
         ClickCheck();
-        if (trail && closestBridge) {
+        if (trail && currentSelectedGame == HandheldGames.Catch) {
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBridge.transform.position, trailSpeed * Time.deltaTime);
+        } else if (trail && currentSelectedGame == HandheldGames.Break) {
+            trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBreakable.transform.position, trailSpeed * Time.deltaTime);
         }
     }
         
@@ -151,8 +158,18 @@ public class FirstPersonPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1")) {
             CameraRayCheck();
 
-            trail.transform.position = camTrans.position + (camTrans.forward * 5f);
-            GetClosestBridge();
+            switch(currentSelectedGame) {
+                case HandheldGames.None:
+                    break;
+                case HandheldGames.Catch:
+                    trail.transform.position = camTrans.position + (camTrans.forward * 5f);
+                    SetClosestBridge();
+                    break;
+                case HandheldGames.Break:
+                    trail.transform.position = camTrans.position + (camTrans.forward * 5f);
+                    SetClosestBreakable();
+                    break;
+            }
         }
     }
 
@@ -297,7 +314,7 @@ public class FirstPersonPlayerController : MonoBehaviour
         }
     }
 
-    private void GetClosestBridge() {
+    private void SetClosestBridge() {
         float minDist = minimumDistance;
         foreach(GameObject b in bridges) {
             float dist = Vector3.Distance(transform.position, b.transform.position);
@@ -311,6 +328,22 @@ public class FirstPersonPlayerController : MonoBehaviour
         if (!closestBridge.GetComponent<BoxCollider>().enabled) {
             closestBridge.GetComponent<BoxCollider>().enabled = true;
             closestBridge.GetComponent<Renderer>().material = bridgeMaterial;
+            SetClosestBridge();
         }
+    }
+
+    private void SetClosestBreakable() {
+        float minDist = minimumDistance;
+        foreach (GameObject b in breakables) {
+            float dist = Vector3.Distance(transform.position, b.transform.position);
+            if (dist < minDist) {
+                closestBreakable = b;
+                minDist = dist;
+            }
+        }
+    }
+    public void Break() {
+        Instantiate(explosionParticles, closestBreakable.transform.position, Quaternion.identity);
+        Destroy(closestBreakable);
     }
 }
