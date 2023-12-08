@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class GameOverScript : MonoBehaviour
 {
+    public GameObject player;
     public void restartCheckpoint()
     {
         unpause();
-        SceneManager.LoadScene("Main Scene");
+        gameObject.SetActive(false);
+        player.GetComponent<FirstPersonPlayerController> ().BackToCheckPoint();
     }
 
     public void restartLevel()
