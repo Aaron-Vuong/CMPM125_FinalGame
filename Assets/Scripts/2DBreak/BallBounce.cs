@@ -8,10 +8,6 @@ public class BallBounce : MonoBehaviour
     Rigidbody rb;
 
     [SerializeField] private ParticleSystem explosionParticles;
-    [SerializeField] private float generationAreaWidthX;
-    [SerializeField] private float generationAreaWidthY;
-    private float Y_OFFSET = 9;
-    [SerializeField] private GameObject blockObj;
 
 
     // Start is called before the first frame update
@@ -20,16 +16,6 @@ public class BallBounce : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         //https://docs.unity3d.com/ScriptReference/Rigidbody.AddForce.html
-        int numBlocks = MiniGamePlayerController.Instance.blockGoal;
-        for (int i = 0; i < numBlocks; i++) {
-            float posX = Random.Range(-generationAreaWidthX, generationAreaWidthX);
-            float posY = Y_OFFSET + Random.Range(-generationAreaWidthY, generationAreaWidthY);
-            Vector3 generationPos = new Vector3(posX, posY, 0);
-
-            Instantiate(blockObj, generationPos, Quaternion.identity);
-        }
-        MiniGamePlayerController.Instance.finishBreakoutSetup();
-
         float xForce = Random.Range(-5,5);
         rb.AddForce(new Vector3(xForce, -5, 0), ForceMode.Impulse);
     }

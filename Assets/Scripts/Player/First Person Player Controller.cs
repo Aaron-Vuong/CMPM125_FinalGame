@@ -109,7 +109,7 @@ public class FirstPersonPlayerController : MonoBehaviour
         InitiateUI();
 
         gameInventory = new List<HandheldGames>();
-        isHandheldEnabled = true;
+        isHandheldEnabled = false;
     }
 
     private void Update()
@@ -129,20 +129,25 @@ public class FirstPersonPlayerController : MonoBehaviour
         }
         
         // Cartridge Switcher
-        if (Input.GetButtonDown("Fire2") && ControllerManager.Instance.controllerState == ControllerManager.ControllerStates._3DFPGame && isHandheldEnabled) {
+        if (Input.GetButtonDown("Fire2") && ControllerManager.Instance.controllerState == ControllerManager.ControllerStates._3DFPGame) {
             switch (currentSelectedGame) {
                 case HandheldGames.None:
                     if (gameInventory.Count >= 1)
                         currentSelectedGame = HandheldGames.Catch;
+                        isHandheldEnabled = true;
                     break;
                 case HandheldGames.Catch:
                     if (gameInventory.Count >= 2)
                         currentSelectedGame = HandheldGames.Break;
-                    if (gameInventory.Count == 1)
+                        isHandheldEnabled = true;
+                    if (gameInventory.Count == 1){
                         currentSelectedGame = HandheldGames.None;
+                        isHandheldEnabled = false;
+                    }
                     break;
                 case HandheldGames.Break:
                     currentSelectedGame = HandheldGames.None;
+                    isHandheldEnabled = false;
                     break;
             }
         }
@@ -216,17 +221,12 @@ public class FirstPersonPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1")) {
             switch(currentSelectedGame) {
                 case HandheldGames.None:
-                    isHandheldEnabled = !isHandheldEnabled;
                     break;
                 case HandheldGames.Catch:
-                    if (!isHandheldEnabled)
-                        break;
                     SetClosestBridge();
                     trail.transform.position = camTrans.position + (camTrans.forward * 5f);
                     break;
                 case HandheldGames.Break:
-                    if (!isHandheldEnabled)
-                        break;
                     SetClosestBreakable();
                     trail.transform.position = camTrans.position + (camTrans.forward * 5f);
                     break;
@@ -248,8 +248,9 @@ public class FirstPersonPlayerController : MonoBehaviour
 
             if (!cameraRayCheckText.enabled)
             {
+                // Turn on game
                 cameraRayCheckText.enabled = true;
-                // Debug.Log("Looking down");
+
                 // https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.LoadScene.html
                 
                 switch (currentSelectedGame){
@@ -277,7 +278,8 @@ public class FirstPersonPlayerController : MonoBehaviour
             
             if (cameraRayCheckText.enabled)
             {
-                cameraRayCheckText.text = String.Empty;
+                // Turn off game
+                cameraRayCheckText.text = "";
                 cameraRayCheckText.enabled = false;
                 // Debug.Log("not looking down");
                 ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._3DFPGame);
@@ -290,6 +292,10 @@ public class FirstPersonPlayerController : MonoBehaviour
                     
                     case HandheldGames.Break:
                         SceneManager.UnloadSceneAsync("BreakOut");
+                        GameObject[] trashBlocks = GameObject.FindGameObjectsWithTag("block");
+                        foreach(GameObject t in trashBlocks) {
+                            Destroy(t);
+                        }
                         break;
                 }
 
