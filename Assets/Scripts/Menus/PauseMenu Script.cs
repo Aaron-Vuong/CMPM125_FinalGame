@@ -44,8 +44,8 @@ public class PauseMenuScript : MonoBehaviour
     public void backToMenu()
     {
         Time.timeScale = 1f;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
         SceneManager.LoadScene("Title Scene");
     }
 }

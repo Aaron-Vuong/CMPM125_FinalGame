@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class BallBounce : MonoBehaviour
 {
-    private float bounceMultiply = 15.0f;
+    private float bounceMultiply = 25.0f;
     Rigidbody rb;
 
     [SerializeField] private ParticleSystem explosionParticles;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,11 @@ public class BallBounce : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+           
+    }
+
+    void FixedUpdate()
+    {
         
     }
 
@@ -29,29 +36,31 @@ public class BallBounce : MonoBehaviour
     {
 
         // Apply the reflection force to the ball
-        rb.velocity = Vector3.Reflect(rb.velocity, collision.contacts[0].normal).normalized * bounceMultiply;
-        // Debug.Log(rb.velocity);
-        if(rb.velocity.y < 0.02 && rb.velocity.y > -0.02){
-            Vector3 temp = rb.velocity;
+        Vector3 direction = Vector3.Reflect(rb.velocity.normalized, collision.GetContact(0).normal);
+        
+        rb.velocity = direction * Mathf.Max(bounceMultiply, rb.velocity.magnitude);
+        Debug.Log(rb.velocity);
+        // if(rb.velocity.y < 0.02 && rb.velocity.y > -0.02){
+        //     Vector3 temp = rb.velocity;
             
-            if( rb.velocity.y < 0) // negative
-                temp.y = -10;
-            else
-                temp.y = 10;
+        //     if( rb.velocity.y < 0) // negative
+        //         temp.y = -10;
+        //     else
+        //         temp.y = 10;
 
-            rb.velocity = temp;
-        }
+        //     rb.velocity = temp;
+        // }
 
-        if(rb.velocity.x < 0.02 && rb.velocity.x > -0.02){
-            Vector3 temp = rb.velocity;
+        // if(rb.velocity.x < 0.02 && rb.velocity.x > -0.02){
+        //     Vector3 temp = rb.velocity;
 
-            if( rb.velocity.x < 0) // negative
-                temp.x = -10;
-            else
-                temp.x = 10;
+        //     if( rb.velocity.x < 0) // negative
+        //         temp.x = -10;
+        //     else
+        //         temp.x = 10;
 
-            rb.velocity = temp;
-        }
+        //     rb.velocity = temp;
+        // }
 
 
     }
@@ -76,6 +85,4 @@ public class BallBounce : MonoBehaviour
         Debug.Log("Life Lost");
         transform.gameObject.SetActive(false);
     }
-
-
 }

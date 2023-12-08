@@ -17,12 +17,14 @@ public class Cartridge : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Triggered");
-        Debug.Log(other.tag);
+        // Debug.Log("Triggered");
+        // Debug.Log(other.tag);
         // Set the game to display and disappear.
         if (other.tag == "Player") {
             FirstPersonPlayerController controller = other.GetComponent<FirstPersonPlayerController>();
+            controller.isHandheldEnabled = true;
             controller.currentSelectedGame = gameToSelect;
+            controller.gameInventory.Add(gameToSelect);
             gameObject.SetActive(false);
         }
     }

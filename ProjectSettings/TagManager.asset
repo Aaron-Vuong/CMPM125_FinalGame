@@ -17,6 +17,8 @@ TagManager:
   - Bridge
   - Ball
   - Breakable
+  - 2DPlayer
+  - Handheld
   layers:
   - Default
   - TransparentFX

@@ -18,6 +18,18 @@ public class MiniGamePlayerController : MonoBehaviour
 
     [Header("Win UI")] 
     [SerializeField] private TMP_Text winText;
+
+    [Header("Goal Counts")]
+    public int plankGoal;
+    public int blockGoal;
+
+    [Header("Breakout Spawner")]
+    [SerializeField] private float generationAreaWidthX;
+    [SerializeField] private float generationAreaWidthY;
+    private float X_OFFSET = -5;
+    private float Y_OFFSET = 6;
+    [SerializeField] private GameObject blockObj;
+
     
     //Private movement variables
     private float _xInput;
@@ -31,7 +43,7 @@ public class MiniGamePlayerController : MonoBehaviour
     private Rigidbody _rb;
 
     public Camera _2DCam;
-
+    private bool isBreakoutSetUp;
     public List<GameObject> blocks;
 
     //Singleton
@@ -58,6 +70,7 @@ public class MiniGamePlayerController : MonoBehaviour
     
     private void Start()
     {
+        isBreakoutSetUp = false;
         _rb = GetComponent<Rigidbody>();
         _win = false;
 
@@ -65,22 +78,43 @@ public class MiniGamePlayerController : MonoBehaviour
             _2DCam.targetTexture = ControllerManager.Instance.screen;
         }
 
-        blocks = new List<GameObject>();
+        // catch setup
+        if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Catch) {
+            setPlankGoal(FirstPersonPlayerController.Instance.closestBridge.GetComponent<Bridge>().requiredPlanks);
+        }
 
-        GameObject[] existingBlocks = GameObject.FindGameObjectsWithTag("block");
-        foreach (GameObject b in existingBlocks) {
-            blocks.Add(b);
+        // breakout setup
+        if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break) {
+            setBlockGoal(FirstPersonPlayerController.Instance.closestBreakable.GetComponent<Breakable>().requiredBricks);
+
+            blocks = new List<GameObject>();
+
+            for (int i = 0; i < blockGoal; i++) {
+                float posX = transform.position.x + X_OFFSET + UnityEngine.Random.Range(0f, generationAreaWidthX);
+                float posY = transform.position.y + Y_OFFSET + UnityEngine.Random.Range(0f, generationAreaWidthY);
+                Vector3 generationPos = new Vector3(posX, posY, transform.position.z);
+
+                Instantiate(blockObj, generationPos, Quaternion.identity);
+            }
+            GameObject[] existingBlocks = GameObject.FindGameObjectsWithTag("block");
+            foreach (GameObject b in existingBlocks) {
+                blocks.Add(b);
+            }
+
+            isBreakoutSetUp = true;
         }
     }
     
     private void Update()
     {
-        if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !_win) {
+        // breakout win condition
+        if (isBreakoutSetUp && FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !_win) {
             if (blocks.Count <= 0) {
                 _win = true;
             }
         }
-        //ReceiveMovementInput();
+        
+        // affect 3d game
         if (_win && FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !winFlag)
         {
             winFlag = true;
@@ -116,7 +150,8 @@ public class MiniGamePlayerController : MonoBehaviour
             _plankCount++;
             plankCountText.text = "Wooden Plank: " + _plankCount;
 
-            if(_plankCount >= 5){ // win
+            // catch win condition
+            if(_plankCount >= plankGoal){ // win
                 _win = true;
             }
         }
@@ -156,5 +191,13 @@ public class MiniGamePlayerController : MonoBehaviour
 
     public bool getWin(){
         return _win;
+    }
+
+    public void setPlankGoal(int goal) {
+        plankGoal = goal;
+    }
+
+    public void setBlockGoal(int goal) {
+        blockGoal = goal;
     }
 }
