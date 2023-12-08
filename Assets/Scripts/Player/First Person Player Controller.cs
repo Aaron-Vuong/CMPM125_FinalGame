@@ -419,6 +419,7 @@ public class FirstPersonPlayerController : MonoBehaviour
 
     public void BackToCheckPoint()
     {
+        Debug.Log("curr check position: " + currentCheckPoint.position);
         transform.position = currentCheckPoint.position;
     }
 }
