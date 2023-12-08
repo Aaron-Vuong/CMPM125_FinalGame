@@ -10,6 +10,11 @@ public class MenuScript : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void gotoCredits()
+    {
+        SceneManager.LoadScene("Credits Scene");
+    }
+
     public void exitGame()
     {
         Debug.Log("Quitting the Game.");
