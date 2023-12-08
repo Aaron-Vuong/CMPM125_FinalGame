@@ -31,6 +31,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     [Header("UI Text")] 
     [SerializeField] private TMP_Text cameraRayCheckText;
     [SerializeField] private TMP_Text currentGameText;
+    [SerializeField] private TMP_Text switchGameTipText;
 
     [Header("Bridges & Breakables")] 
     [SerializeField] private float minimumDistance;
@@ -122,7 +123,7 @@ public class FirstPersonPlayerController : MonoBehaviour
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBreakable.transform.position, trailSpeed * Time.deltaTime);
         }
 
-        
+        // Toggles handheld renderers
         Renderer[] renderers = GameObject.FindGameObjectWithTag("Handheld").GetComponentsInChildren<Renderer>();
         foreach (Renderer r in renderers) {
             r.enabled = isHandheldEnabled;
@@ -151,6 +152,9 @@ public class FirstPersonPlayerController : MonoBehaviour
                     break;
             }
         }
+
+        // show tip text once player has cartridge
+        switchGameTipText.enabled = gameInventory.Count >= 1;
 
         currentGameText.text = "Current Game Selected:\n";
             switch (currentSelectedGame) {
