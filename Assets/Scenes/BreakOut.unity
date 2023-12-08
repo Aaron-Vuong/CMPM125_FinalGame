@@ -1288,7 +1288,7 @@ MonoBehaviour:
   plankGoal: 0
   blockGoal: 0
   generationAreaWidthX: 11
-  generationAreaWidthY: 3
+  generationAreaWidthY: 6
   blockObj: {fileID: 1252405275516898532, guid: 914bc6639d03c8e46869650c519409b7,
     type: 3}
   _2DCam: {fileID: 1385795533}

@@ -27,7 +27,7 @@ public class MiniGamePlayerController : MonoBehaviour
     [SerializeField] private float generationAreaWidthX;
     [SerializeField] private float generationAreaWidthY;
     private float X_OFFSET = -5;
-    private float Y_OFFSET = 9;
+    private float Y_OFFSET = 6;
     [SerializeField] private GameObject blockObj;
 
     
