@@ -5,7 +5,8 @@ using UnityEngine;
 public enum HandheldGames
 {
     None,
-    WoodenPlank,
+    Catch,
+    Break
 } 
 
 
@@ -19,8 +20,10 @@ public class Cartridge : MonoBehaviour
         Debug.Log("Triggered");
         Debug.Log(other.tag);
         // Set the game to display and disappear.
-        FirstPersonPlayerController controller = other.GetComponent<FirstPersonPlayerController>();
-        controller.currentSelectedGame = gameToSelect;
-        gameObject.SetActive(false);
+        if (other.tag == "Player") {
+            FirstPersonPlayerController controller = other.GetComponent<FirstPersonPlayerController>();
+            controller.currentSelectedGame = gameToSelect;
+            gameObject.SetActive(false);
+        }
     }
 }

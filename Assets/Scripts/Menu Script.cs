@@ -7,7 +7,7 @@ public class MenuScript : MonoBehaviour
 {
     public void playGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("Main Scene");
     }
 
     public void gotoCredits()

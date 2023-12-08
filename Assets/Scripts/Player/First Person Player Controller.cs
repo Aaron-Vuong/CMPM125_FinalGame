@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
-//using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,7 +19,7 @@ public class FirstPersonPlayerController : MonoBehaviour
     [SerializeField] [Range(0, 0.5f)] private float moveLerpFactor;
     [SerializeField] [Range(0, 0.5f)] private float stopLerpFactor;
 
-    [Header("First Person Camera Transform")] 
+    [Header("First Person Camera")] 
     [SerializeField] private Transform camTrans;
 
     [Header("Camera Movement")] 
@@ -30,16 +30,21 @@ public class FirstPersonPlayerController : MonoBehaviour
     [Header("Camera Ray UI Text")] 
     [SerializeField] private TMP_Text cameraRayCheckText;
 
-    [Header("Bridges")] 
+    [Header("Bridges & Breakables")] 
     [SerializeField] private float minimumDistance;
     [SerializeField] private Material bridgeMaterial;
+    [SerializeField] private ParticleSystem explosionParticles;
     private GameObject[] bridges;
+    private GameObject closestBridge;
+    private List<GameObject> breakables;
+    private GameObject closestBreakable;
+
     
 
     [Header("Trail Object")]
     [SerializeField] private GameObject trail;
     private float trailSpeed = 25f;
-    private GameObject closestBridge;
+    
 
     [Header("Game Selection")]
     public HandheldGames currentSelectedGame = HandheldGames.None;
@@ -79,9 +84,20 @@ public class FirstPersonPlayerController : MonoBehaviour
 
     private void Start()
     {
-        bridges = GameObject.FindGameObjectsWithTag("Bridge");
-        GetClosestBridge();
         _rb = GetComponent<Rigidbody>();
+        bridges = GameObject.FindGameObjectsWithTag("Bridge");
+        GameObject[] existingBreakables = GameObject.FindGameObjectsWithTag("Breakable");
+        Debug.Log(existingBreakables.Length);
+
+        breakables = new List<GameObject>();
+
+        foreach (GameObject b in existingBreakables) {
+            breakables.Add(b);
+        }
+
+        Debug.Log(breakables.Count);
+        SetClosestBridge();
+        SetClosestBreakable();
         InitiateMouse();
         InitiateUI();
     }
@@ -90,8 +106,10 @@ public class FirstPersonPlayerController : MonoBehaviour
     {
         GroundCheck();
         ClickCheck();
-        if (trail && closestBridge) {
+        if (trail && currentSelectedGame == HandheldGames.Catch) {
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBridge.transform.position, trailSpeed * Time.deltaTime);
+        } else if (trail && currentSelectedGame == HandheldGames.Break && breakables.Count != 0) {
+            trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBreakable.transform.position, trailSpeed * Time.deltaTime);
         }
     }
         
@@ -150,8 +168,18 @@ public class FirstPersonPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1")) {
             CameraRayCheck();
 
-            trail.transform.position = gameObject.transform.position;
-            GetClosestBridge();
+            switch(currentSelectedGame) {
+                case HandheldGames.None:
+                    break;
+                case HandheldGames.Catch:
+                    trail.transform.position = camTrans.position + (camTrans.forward * 5f);
+                    SetClosestBridge();
+                    break;
+                case HandheldGames.Break:
+                    trail.transform.position = camTrans.position + (camTrans.forward * 5f);
+                    SetClosestBreakable();
+                    break;
+            }
         }
     }
 
@@ -170,7 +198,17 @@ public class FirstPersonPlayerController : MonoBehaviour
                 cameraRayCheckText.enabled = true;
                 Debug.Log("Looking down");
                 // https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.LoadScene.html
-                SceneManager.LoadScene("Test 2D Game Scene", LoadSceneMode.Additive);
+                
+                switch (currentSelectedGame){
+                    case HandheldGames.Catch:
+                        SceneManager.LoadScene("SupplyCatcher", LoadSceneMode.Additive);
+                        break;
+                    
+                    case HandheldGames.Break:
+                        SceneManager.LoadScene("BreakOut", LoadSceneMode.Additive);
+                        break;
+                }
+                
                 ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._2DGame);
 
                 // stop player
@@ -191,7 +229,18 @@ public class FirstPersonPlayerController : MonoBehaviour
                 Debug.Log("not looking down");
                 ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._3DFPGame);
                 //https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.UnloadSceneAsync.html
-                SceneManager.UnloadSceneAsync("Test 2D Game Scene");
+                
+                switch (currentSelectedGame){
+                    case HandheldGames.Catch:
+                        SceneManager.UnloadSceneAsync("SupplyCatcher");
+                        break;
+                    
+                    case HandheldGames.Break:
+                        SceneManager.UnloadSceneAsync("BreakOut");
+                        break;
+                }
+
+                
             }
         }
     }
@@ -275,7 +324,7 @@ public class FirstPersonPlayerController : MonoBehaviour
         }
     }
 
-    private void GetClosestBridge() {
+    private void SetClosestBridge() {
         float minDist = minimumDistance;
         foreach(GameObject b in bridges) {
             float dist = Vector3.Distance(transform.position, b.transform.position);
@@ -283,19 +332,29 @@ public class FirstPersonPlayerController : MonoBehaviour
                 closestBridge = b;
                 minDist = dist;
             }
-            Debug.Log(b.name);
-        }
-        if (closestBridge) {
-            Debug.Log("Closest Bridge: " + closestBridge.name);
-        } else {
-            Debug.Log("No Bridges Nearby");
         }
     }
     public void BuildBridge(){
-        // Bridge.SetActive(true);
         if (!closestBridge.GetComponent<BoxCollider>().enabled) {
             closestBridge.GetComponent<BoxCollider>().enabled = true;
             closestBridge.GetComponent<Renderer>().material = bridgeMaterial;
+            SetClosestBridge();
         }
+    }
+
+    private void SetClosestBreakable() {
+        float minDist = minimumDistance;
+        foreach (GameObject b in breakables) {
+            float dist = Vector3.Distance(transform.position, b.transform.position);
+            if (dist < minDist) {
+                closestBreakable = b;
+                minDist = dist;
+            }
+        }
+    }
+    public void Break() {
+        Instantiate(explosionParticles, closestBreakable.transform.position, Quaternion.identity);
+        breakables.Remove(closestBreakable);
+        Destroy(closestBreakable);
     }
 }

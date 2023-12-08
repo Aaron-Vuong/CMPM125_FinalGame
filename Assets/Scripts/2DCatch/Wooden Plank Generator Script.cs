@@ -25,7 +25,7 @@ public class WoodenPlankGeneratorScript : MonoBehaviour
             var posX = Random.Range(-generationAreaWidth, generationAreaWidth);
 
             Vector3 generationPos = new Vector3(transform.position.x + posX, transform.position.y, transform.position.z);
-            GameObject.Instantiate(plankOjb, generationPos, Quaternion.identity);
+            Instantiate(plankOjb, generationPos, Quaternion.identity);
         }
     }
 }

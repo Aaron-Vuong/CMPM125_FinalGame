@@ -4,10 +4,19 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - block
+  - 'First and last name as spelt on insurance:
+
+    Date of Birth:
+
+    Social security
+    number:'
+  - Ground
   - DeadZone
   - WoodenPlank
-  - Ground
   - Bridge
+  - Ball
+  - Breakable
   layers:
   - Default
   - TransparentFX
@@ -15,9 +24,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Player
-  - Ground
-  - Handheld
+  - 
+  - 
+  - 
   - 
   - 
   - 

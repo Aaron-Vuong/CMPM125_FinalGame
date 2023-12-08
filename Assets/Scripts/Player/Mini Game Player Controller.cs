@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -24,9 +25,14 @@ public class MiniGamePlayerController : MonoBehaviour
     private int _plankCount;
 
     private bool _win;
+    private bool winFlag;
     
     //Private components
     private Rigidbody _rb;
+
+    public Camera _2DCam;
+
+    public List<GameObject> blocks;
 
     //Singleton
     private static MiniGamePlayerController _instance;
@@ -54,11 +60,42 @@ public class MiniGamePlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _win = false;
+
+        if(ControllerManager.Instance.screen != null){ // 3D world has console with display
+            _2DCam.targetTexture = ControllerManager.Instance.screen;
+        }
+
+        blocks = new List<GameObject>();
+
+        GameObject[] existingBlocks = GameObject.FindGameObjectsWithTag("block");
+        foreach (GameObject b in existingBlocks) {
+            blocks.Add(b);
+        }
     }
     
     private void Update()
     {
+        if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !_win) {
+            if (blocks.Count <= 0) {
+                _win = true;
+            }
+        }
         //ReceiveMovementInput();
+        if (_win && FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !winFlag)
+        {
+            winFlag = true;
+            winText.enabled = true;
+            if (!ControllerManager.Instance._2DDev)
+                FirstPersonPlayerController.Instance.Break();
+        }
+        else if (_win && FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Catch && !winFlag)
+        {
+            winFlag = true;
+            plankCountText.enabled = false;
+            winText.enabled = true;
+            if(!ControllerManager.Instance._2DDev) // not in 2D development mode
+                FirstPersonPlayerController.Instance.BuildBridge();
+        }
     }
 
     private void FixedUpdate()
@@ -81,9 +118,6 @@ public class MiniGamePlayerController : MonoBehaviour
 
             if(_plankCount >= 5){ // win
                 _win = true;
-                plankCountText.enabled = false;
-                winText.enabled = true;
-                FirstPersonPlayerController.Instance.BuildBridge();
             }
         }
     }
