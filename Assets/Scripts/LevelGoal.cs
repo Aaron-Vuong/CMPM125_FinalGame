@@ -18,7 +18,7 @@ public class LevelGoal : MonoBehaviour
 
     private IEnumerator LoadNextScene()
     {
-        crossFadeAnimator.SetTrigger("Cross Fade Start");
+        crossFadeAnimator.Play("Cross Fade Start");
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(nextScene);
     }
