@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BallBounceTest : MonoBehaviour
 {
-    private int speed = 10;
+    private int speed = 15;
     private Vector3 direction;
     private float volume = 0.75f;
     [SerializeField] private AudioSource hitBlockSfx;
