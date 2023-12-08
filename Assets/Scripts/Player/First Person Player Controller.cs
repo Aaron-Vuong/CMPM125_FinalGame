@@ -39,6 +39,9 @@ public class FirstPersonPlayerController : MonoBehaviour
     private List<GameObject> breakables;
     private GameObject closestBreakable;
 
+    [Header("Check Point")] 
+    public Transform currentCheckPoint;
+
     
 
     [Header("Trail Object")]
@@ -356,5 +359,10 @@ public class FirstPersonPlayerController : MonoBehaviour
         Instantiate(explosionParticles, closestBreakable.transform.position, Quaternion.identity);
         breakables.Remove(closestBreakable);
         Destroy(closestBreakable);
+    }
+
+    public void BackToCheckPoint()
+    {
+        transform.position = currentCheckPoint.position;
     }
 }
