@@ -13,6 +13,7 @@ _Retro-Active_ is a puzzle adventure game where the player must navigate through
 - `LMB while looking at handheld` - Play 2D Game
 - `LMB while looking away from handlehd` - Stop Playing 2D Game
 - `RMB / Left Alt` - Switch 2D Game Cartridge
+- `C` - Put Away or Take Out Handheld.
 
 ## Controls (2D)
 
