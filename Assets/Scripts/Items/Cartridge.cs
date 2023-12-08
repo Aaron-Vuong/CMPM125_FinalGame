@@ -24,7 +24,7 @@ public class Cartridge : MonoBehaviour
             FirstPersonPlayerController controller = other.GetComponent<FirstPersonPlayerController>();
             controller.isHandheldEnabled = true;
             controller.collectCartridgeSfx.PlayOneShot(controller.collectCartridgeSfx.clip, controller.volume);
-            controller.currentSelectedGame = gameToSelect;
+            //controller.currentSelectedGame = gameToSelect;
             controller.gameInventory.Add(gameToSelect);
             gameObject.SetActive(false);
         }

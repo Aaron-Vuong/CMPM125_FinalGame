@@ -1415,6 +1415,7 @@ MonoBehaviour:
   spawnPointTransform: {fileID: 123696504}
   plankCountText: {fileID: 1310965038}
   plankCollectSfx: {fileID: 0}
+  deletePlankSfx: {fileID: 0}
   winText: {fileID: 1041035265}
   plankGoal: 0
   blockGoal: 0
@@ -1655,7 +1656,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540708286}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &1540708293
 MonoBehaviour:
   m_ObjectHideFlags: 0

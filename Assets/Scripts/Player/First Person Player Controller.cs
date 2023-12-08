@@ -66,6 +66,8 @@ public class FirstPersonPlayerController : MonoBehaviour
     public HandheldGames currentSelectedGame = HandheldGames.None;
     public List<HandheldGames> gameInventory;
     public bool isHandheldEnabled;
+    public GameObject breakCart;
+    public GameObject catchCart;
 
     //Private variables
     private float _xInput;
@@ -133,6 +135,17 @@ public class FirstPersonPlayerController : MonoBehaviour
             trail.transform.position = Vector3.MoveTowards(trail.transform.position, closestBreakable.transform.position, trailSpeed * Time.deltaTime);
         }
 
+        if (isHandheldEnabled){
+            if (gameInventory.Contains(HandheldGames.Catch) && !catchCart.activeSelf){ // enable build bridge
+                catchCart.SetActive(true);
+                catchCart.GetComponent<Animator>().Play("CartridgeLeft"); // move to left
+            }
+            if (gameInventory.Contains(HandheldGames.Break) && !breakCart.activeSelf){ // enable break brick
+                breakCart.SetActive(true);
+                breakCart.GetComponent<Animator>().Play("CartridgeRight"); // move to right
+            }
+        }
+
         // Toggles handheld renderers
         Renderer[] renderers = GameObject.FindGameObjectWithTag("Handheld").GetComponentsInChildren<Renderer>();
         foreach (Renderer r in renderers) {
@@ -140,33 +153,45 @@ public class FirstPersonPlayerController : MonoBehaviour
         }
         
         // Cartridge Switcher
-        if (Input.GetButtonDown("Fire2") && ControllerManager.Instance.controllerState == ControllerManager.ControllerStates._3DFPGame) {
+        if (isHandheldEnabled && Input.GetButtonDown("Fire2") && ControllerManager.Instance.controllerState == ControllerManager.ControllerStates._3DFPGame) {
             switch (currentSelectedGame) {
                 case HandheldGames.None:
-                    if (gameInventory.Count >= 1) {
+                    if (gameInventory.Count >= 1)
                         currentSelectedGame = HandheldGames.Catch;
-                        isHandheldEnabled = true;
+                        catchCart.GetComponent<Animator>().Play("CartridgeLeftReverse"); // insert from left
+                        //isHandheldEnabled = true;
                         switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
-                    }
                     break;
                 case HandheldGames.Catch:
-                    if (gameInventory.Count >= 2) {
+                    if (gameInventory.Count >= 2)
                         currentSelectedGame = HandheldGames.Break;
-                        isHandheldEnabled = true;
+                        //isHandheldEnabled = true;
                         switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
-                    }
-                    if (gameInventory.Count == 1) {
+                    if (gameInventory.Count == 1){
                         currentSelectedGame = HandheldGames.None;
-                        isHandheldEnabled = false;
+                        //isHandheldEnabled = false;
                         switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
                     }
+                    catchCart.GetComponent<Animator>().Play("EjectCartridge"); // eject to left
+                    breakCart.GetComponent<Animator>().Play("CartridgeRightReverse"); // insert from right
                     break;
                 case HandheldGames.Break:
-                    currentSelectedGame = HandheldGames.None;
-                    isHandheldEnabled = false;
+                    //currentSelectedGame = HandheldGames.None;
+                    //isHandheldEnabled = false;
                     switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
+                    currentSelectedGame = HandheldGames.Catch;
+                    catchCart.GetComponent<Animator>().Play("CartridgeLeftReverse"); // insert from left
+                    breakCart.GetComponent<Animator>().Play("EjectCartridge 0"); // eject to right
                     break;
             }
+        }
+
+        // hide game
+        if (Input.GetKeyDown(KeyCode.C) && ControllerManager.Instance.controllerState == ControllerManager.ControllerStates._3DFPGame) {
+            currentSelectedGame = HandheldGames.None;
+            isHandheldEnabled = !isHandheldEnabled;
+            catchCart.SetActive(false);
+            breakCart.SetActive(false);
         }
 
         // show tip text once player has cartridge
