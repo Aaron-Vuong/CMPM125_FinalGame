@@ -1185,7 +1185,7 @@ GameObject:
   - component: {fileID: 1439609501}
   m_Layer: 6
   m_Name: 2DPlayer
-  m_TagString: Player
+  m_TagString: 2DPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1323,7 +1323,9 @@ MonoBehaviour:
   spawnPointTransform: {fileID: 123696504}
   plankCountText: {fileID: 1310965038}
   winText: {fileID: 1041035265}
+  plankGoal: 0
   _2DCam: {fileID: 1385795533}
+  blocks: []
 --- !u!1 &1604499130
 GameObject:
   m_ObjectHideFlags: 0

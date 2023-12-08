@@ -1280,7 +1280,7 @@ GameObject:
   - component: {fileID: 1496894026}
   m_Layer: 0
   m_Name: 2DPlayer
-  m_TagString: Untagged
+  m_TagString: 2DPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1318,6 +1318,8 @@ MonoBehaviour:
   spawnPointTransform: {fileID: 123696504}
   plankCountText: {fileID: 1310965038}
   winText: {fileID: 1041035265}
+  plankGoal: 0
+  blockGoal: 0
   _2DCam: {fileID: 1385795533}
   blocks: []
 --- !u!54 &1496894027
@@ -1566,6 +1568,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionParticles: {fileID: 3438058638789549875, guid: c95f2f99248af8c4c9f38f3f715a7e15,
     type: 3}
+  generationAreaWidthX: 5
+  generationAreaWidthY: 1
+  blockObj: {fileID: 0}
 --- !u!1 &1592252728
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,17 +1983,17 @@ PrefabInstance:
     - target: {fileID: 4757336751684537023, guid: 914bc6639d03c8e46869650c519409b7,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4757336751684537023, guid: 914bc6639d03c8e46869650c519409b7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4
+      value: -0.54
       objectReference: {fileID: 0}
     - target: {fileID: 4757336751684537023, guid: 914bc6639d03c8e46869650c519409b7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12
+      value: 8.8
       objectReference: {fileID: 0}
     - target: {fileID: 4757336751684537023, guid: 914bc6639d03c8e46869650c519409b7,
         type: 3}

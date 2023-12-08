@@ -18,6 +18,10 @@ public class MiniGamePlayerController : MonoBehaviour
 
     [Header("Win UI")] 
     [SerializeField] private TMP_Text winText;
+
+    [Header("Goal Counts")]
+    public int plankGoal;
+    public int blockGoal;
     
     //Private movement variables
     private float _xInput;
@@ -65,22 +69,29 @@ public class MiniGamePlayerController : MonoBehaviour
             _2DCam.targetTexture = ControllerManager.Instance.screen;
         }
 
-        blocks = new List<GameObject>();
+        // catch setup
+        if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Catch) {
+            setPlankGoal(FirstPersonPlayerController.Instance.closestBridge.GetComponent<Bridge>().requiredPlanks);
+        }
 
-        GameObject[] existingBlocks = GameObject.FindGameObjectsWithTag("block");
-        foreach (GameObject b in existingBlocks) {
-            blocks.Add(b);
+        // breakout setup
+        if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break) {
+            setBlockGoal(FirstPersonPlayerController.Instance.closestBreakable.GetComponent<Breakable>().requiredBricks);
+
+            blocks = new List<GameObject>();
         }
     }
     
     private void Update()
     {
+        // breakout win condition
         if (FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !_win) {
             if (blocks.Count <= 0) {
                 _win = true;
             }
         }
-        //ReceiveMovementInput();
+        
+        // affect 3d game
         if (_win && FirstPersonPlayerController.Instance.currentSelectedGame == HandheldGames.Break && !winFlag)
         {
             winFlag = true;
@@ -116,7 +127,8 @@ public class MiniGamePlayerController : MonoBehaviour
             _plankCount++;
             plankCountText.text = "Wooden Plank: " + _plankCount;
 
-            if(_plankCount >= 5){ // win
+            // catch win condition
+            if(_plankCount >= plankGoal){ // win
                 _win = true;
             }
         }
@@ -156,5 +168,20 @@ public class MiniGamePlayerController : MonoBehaviour
 
     public bool getWin(){
         return _win;
+    }
+
+    public void setPlankGoal(int goal) {
+        plankGoal = goal;
+    }
+
+    public void setBlockGoal(int goal) {
+        blockGoal = goal;
+    }
+
+    public void finishBreakoutSetup() {
+        GameObject[] existingBlocks = GameObject.FindGameObjectsWithTag("block");
+        foreach (GameObject b in existingBlocks) {
+            blocks.Add(b);
+        }
     }
 }
