@@ -1,55 +1,43 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
----
-!u!78 &1
+--- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-    - DeadZone
-    - WoodenPlank
-    - Ground
-    - Bridge
-    - "First and last name as spelt on insurance:
-
-      Date of Birth:
-
-      Social
-      security number:"
-    - block
+  tags: []
   layers:
-    - Default
-    - TransparentFX
-    - Ignore Raycast
-    -
-    - Water
-    - UI
-    - Player
-    - Ground
-    - Handheld
-    - 2DGame
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
-    -
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
-    - name: Default
-      uniqueID: 0
-      locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0

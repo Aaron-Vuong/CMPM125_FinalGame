@@ -5,7 +5,8 @@ using UnityEngine;
 public enum HandheldGames
 {
     None,
-    WoodenPlank,
+    Catch,
+    Break
 } 
 
 

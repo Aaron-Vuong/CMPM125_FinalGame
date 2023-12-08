@@ -7,13 +7,16 @@ public class BallBounce : MonoBehaviour
     private float bounceMultiply = 10.0f;
     Rigidbody rb;
 
+    [SerializeField] private ParticleSystem explosionParticles;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
         //https://docs.unity3d.com/ScriptReference/Rigidbody.AddForce.html
-        rb.AddForce(new Vector3(5,-5, 0), ForceMode.Impulse);
+        float xForce = Random.Range(-5,5);
+        rb.AddForce(new Vector3(xForce, -5, 0), ForceMode.Impulse);
     }
 
     // Update is called once per frame
@@ -58,7 +61,8 @@ public class BallBounce : MonoBehaviour
 
         if (collision.gameObject.CompareTag("block"))
         {
-            Destroy(collision.gameObject, 0.2f);
+            Instantiate(explosionParticles, collision.gameObject.transform.position, Quaternion.identity);
+            Destroy(collision.gameObject, 0.1f);
         }
         
         if (collision.gameObject.CompareTag("Ground"))

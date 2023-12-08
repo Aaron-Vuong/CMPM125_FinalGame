@@ -52,13 +52,6 @@ public class FirstPersonPlayerController : MonoBehaviour
     private LayerMask _onlyHandheld = 1 << 8;
     private LayerMask _ignorePlayerLayerMask = ~(1 << 6);
 
-    private enum Games {
-        Catch,
-        Break,
-    }
-
-    private Games selected;
-
     //Private components
     private Rigidbody _rb;
     
@@ -92,7 +85,6 @@ public class FirstPersonPlayerController : MonoBehaviour
         InitiateMouse();
         InitiateUI();
 
-        selected = Games.Break; // selects what game will show on 2D display
     }
 
     private void Update()
@@ -180,12 +172,12 @@ public class FirstPersonPlayerController : MonoBehaviour
                 Debug.Log("Looking down");
                 // https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.LoadScene.html
                 
-                switch (selected){
-                    case Games.Catch:
+                switch (currentSelectedGame){
+                    case HandheldGames.Catch:
                         SceneManager.LoadScene("SupplyCatcher", LoadSceneMode.Additive);
                         break;
                     
-                    case Games.Break:
+                    case HandheldGames.Break:
                         SceneManager.LoadScene("BreakOut", LoadSceneMode.Additive);
                         break;
                 }
@@ -211,12 +203,12 @@ public class FirstPersonPlayerController : MonoBehaviour
                 ControllerManager.Instance.setControllerState(ControllerManager.ControllerStates._3DFPGame);
                 //https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.UnloadSceneAsync.html
                 
-                switch (selected){
-                    case Games.Catch:
+                switch (currentSelectedGame){
+                    case HandheldGames.Catch:
                         SceneManager.UnloadSceneAsync("SupplyCatcher");
                         break;
                     
-                    case Games.Break:
+                    case HandheldGames.Break:
                         SceneManager.UnloadSceneAsync("BreakOut");
                         break;
                 }
@@ -313,18 +305,9 @@ public class FirstPersonPlayerController : MonoBehaviour
                 closestBridge = b;
                 minDist = dist;
             }
-            // Debug.Log(b.name);
         }
-        /*
-        if (closestBridge) {
-            Debug.Log("Closest Bridge: " + closestBridge.name);
-        } else {
-            Debug.Log("No Bridges Nearby");
-        }
-        */
     }
     public void BuildBridge(){
-        // Bridge.SetActive(true);
         if (!closestBridge.GetComponent<BoxCollider>().enabled) {
             closestBridge.GetComponent<BoxCollider>().enabled = true;
             closestBridge.GetComponent<Renderer>().material = bridgeMaterial;
