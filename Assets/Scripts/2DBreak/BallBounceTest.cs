@@ -7,6 +7,9 @@ public class BallBounceTest : MonoBehaviour
 {
     private int speed = 10;
     private Vector3 direction;
+    private float volume = 0.75f;
+    [SerializeField] private AudioSource hitBlockSfx;
+    [SerializeField] private AudioSource ballBounceSfx;
 
     [SerializeField] private ParticleSystem explosionParticles;
 
@@ -40,6 +43,7 @@ public class BallBounceTest : MonoBehaviour
             }
         }
         // Apply the reflection force to the ball
+        ballBounceSfx.PlayOneShot(ballBounceSfx.clip, volume);
         direction = Vector3.Reflect(direction, collision.GetContact(0).normal);
     }
 
@@ -51,6 +55,7 @@ public class BallBounceTest : MonoBehaviour
             Instantiate(explosionParticles, collision.gameObject.transform.position, Quaternion.identity);
             MiniGamePlayerController.Instance.blocks.Remove(collision.gameObject);
             Destroy(collision.gameObject, 0.1f);
+            hitBlockSfx.PlayOneShot(hitBlockSfx.clip, volume);
         }
 
         if (collision.gameObject.CompareTag("Ground"))

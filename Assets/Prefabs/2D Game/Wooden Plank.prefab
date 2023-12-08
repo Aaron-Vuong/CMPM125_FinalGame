@@ -146,5 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef59b354a1fa80439fa15186ff0b18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deletePlankSfx: {fileID: 6313197242019137543, guid: 573d2d0958eb5f2428962eadede2fab8,
+    type: 3}
   explosionParticles: {fileID: 3438058638789549875, guid: c95f2f99248af8c4c9f38f3f715a7e15,
     type: 3}

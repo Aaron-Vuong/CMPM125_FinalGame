@@ -41,6 +41,16 @@ public class FirstPersonPlayerController : MonoBehaviour
     public GameObject closestBridge;
     private List<GameObject> breakables;
     public GameObject closestBreakable;
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource jumpSfx;
+    [SerializeField] public AudioSource collectCartridgeSfx;
+    [SerializeField] private AudioSource destroyBreakableSfx;
+    [SerializeField] private AudioSource buildBridgeSfx;
+    
+    [SerializeField] private AudioSource toggleGameSfx;
+    
+    [SerializeField] private AudioSource switchGameSfx;
+    public float volume = 0.75f;
 
     [Header("Check Point")] 
     public Transform currentCheckPoint;
@@ -133,22 +143,28 @@ public class FirstPersonPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire2") && ControllerManager.Instance.controllerState == ControllerManager.ControllerStates._3DFPGame) {
             switch (currentSelectedGame) {
                 case HandheldGames.None:
-                    if (gameInventory.Count >= 1)
+                    if (gameInventory.Count >= 1) {
                         currentSelectedGame = HandheldGames.Catch;
                         isHandheldEnabled = true;
+                        switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
+                    }
                     break;
                 case HandheldGames.Catch:
-                    if (gameInventory.Count >= 2)
+                    if (gameInventory.Count >= 2) {
                         currentSelectedGame = HandheldGames.Break;
                         isHandheldEnabled = true;
-                    if (gameInventory.Count == 1){
+                        switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
+                    }
+                    if (gameInventory.Count == 1) {
                         currentSelectedGame = HandheldGames.None;
                         isHandheldEnabled = false;
+                        switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
                     }
                     break;
                 case HandheldGames.Break:
                     currentSelectedGame = HandheldGames.None;
                     isHandheldEnabled = false;
+                    switchGameSfx.PlayOneShot(switchGameSfx.clip, volume);
                     break;
             }
         }
@@ -272,9 +288,10 @@ public class FirstPersonPlayerController : MonoBehaviour
                 // stop player
                 _xInput = 0;
                 _yInput = 0;
-
+                toggleGameSfx.PlayOneShot(toggleGameSfx.clip, volume);
             }
             cameraRayCheckText.text = "Interact With Handheld";
+            
         }
         else
         {
@@ -303,7 +320,7 @@ public class FirstPersonPlayerController : MonoBehaviour
                         break;
                 }
 
-                
+                toggleGameSfx.PlayOneShot(toggleGameSfx.clip, volume);
             }
         }
     }
@@ -311,7 +328,8 @@ public class FirstPersonPlayerController : MonoBehaviour
     public void ReceiveMovementInput()
     {
         if (Input.GetButtonDown("Jump") && _isGrounded) {
-            Debug.Log("jump");
+            // Debug.Log("jump");
+            jumpSfx.PlayOneShot(jumpSfx.clip, volume);
             ApplyJump();
         }
         //If have movement input, store _xInput & _yInput
@@ -402,6 +420,7 @@ public class FirstPersonPlayerController : MonoBehaviour
             closestBridge.GetComponent<BoxCollider>().enabled = true;
             closestBridge.GetComponent<Renderer>().material = bridgeMaterial;
             SetClosestBridge();
+            buildBridgeSfx.PlayOneShot(buildBridgeSfx.clip, volume);
         }
     }
 
@@ -419,6 +438,7 @@ public class FirstPersonPlayerController : MonoBehaviour
         Instantiate(explosionParticles, closestBreakable.transform.position, Quaternion.identity);
         breakables.Remove(closestBreakable);
         Destroy(closestBreakable);
+        destroyBreakableSfx.PlayOneShot(destroyBreakableSfx.clip, volume);
     }
 
     public void BackToCheckPoint()

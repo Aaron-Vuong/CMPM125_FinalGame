@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MiniGamePlayerController : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class MiniGamePlayerController : MonoBehaviour
 
     [Header("Plank Count UI")] 
     [SerializeField] private TMP_Text plankCountText;
+    [SerializeField] private AudioSource plankCollectSfx;
+    
+    [SerializeField] private AudioSource deletePlankSfx;
 
     [Header("Win UI")] 
     [SerializeField] private TMP_Text winText;
@@ -29,6 +33,7 @@ public class MiniGamePlayerController : MonoBehaviour
     private float X_OFFSET = -5;
     private float Y_OFFSET = 6;
     [SerializeField] private GameObject blockObj;
+    private float volume = 0.75f;
 
     
     //Private movement variables
@@ -150,6 +155,7 @@ public class MiniGamePlayerController : MonoBehaviour
             _plankCount++;
             plankCountText.text = "Wooden Plank: " + _plankCount;
 
+            plankCollectSfx.PlayOneShot(plankCollectSfx.clip, volume);
             // catch win condition
             if(_plankCount >= plankGoal){ // win
                 _win = true;
@@ -199,5 +205,9 @@ public class MiniGamePlayerController : MonoBehaviour
 
     public void setBlockGoal(int goal) {
         blockGoal = goal;
+    }
+
+    public void playSoundEffect() {
+        deletePlankSfx.PlayOneShot(deletePlankSfx.clip, volume);
     }
 }
